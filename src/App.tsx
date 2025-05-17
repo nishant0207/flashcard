@@ -10,8 +10,22 @@ const App: React.FC = () => {
     const { currentCard, markAsKnown, markAsUnknown, currentIndex, deck, isDone } = useDeck();
 
     const toggleDarkMode = () => {
-        document.documentElement.classList.toggle('dark');
+        const root = document.documentElement;
+        const isDark = root.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     };
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.documentElement.classList.add('dark');
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (isDone) {
@@ -26,14 +40,14 @@ const App: React.FC = () => {
 
     return (
         <>
-            <div className="min-h-screen w-screen bg-white flex flex-col items-center justify-center px-4 py-8 dark:bg-gray-900">
+            <div className="min-h-screen w-screen bg-white flex flex-col items-center justify-start px-4 py-4 sm:py-6 dark:bg-gray-900">
                 <button
                     onClick={toggleDarkMode}
                     className="absolute top-4 right-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 dark:bg-gray-200 dark:text-gray-900 dark:hover:bg-gray-300 transition"
                 >
                     Toggle Theme
                 </button>
-                <div className="w-full max-w-2xl p-6 bg-white text-black rounded-lg dark:text-white dark:bg-gray-900">
+                <div className="mt-10 w-full max-w-2xl p-6 bg-white text-black rounded-lg dark:text-white dark:bg-gray-900">
                     <h1 className="text-3xl font-bold text-center mb-6  black:text-white">Flashcard Viewer</h1>
 
                     <ProgressBar current={currentIndex + 1} total={deck.length}/>
