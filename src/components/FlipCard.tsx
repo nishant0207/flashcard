@@ -1,6 +1,6 @@
 // src/components/FlipCard.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface FlipCardProps {
     front: string;
@@ -9,6 +9,10 @@ interface FlipCardProps {
 
 const FlipCard: React.FC<FlipCardProps> = ({ front, back }) => {
     const [flipped, setFlipped] = useState(false);
+
+    useEffect(() => {
+        setFlipped(false);
+    }, [front, back]);
 
     const flip = () => {
         console.log("card flipped");

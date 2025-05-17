@@ -9,6 +9,10 @@ export interface FlashcardData {
     known: boolean;
 }
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+  return [...array].sort(() => Math.random() - 0.5);
+};
+
 const initialDeck: FlashcardData[] = [
     { id: 1, front: "What is React?", back: "A JavaScript library for building user interfaces.", known: false },
     { id: 2, front: "What is JSX?", back: "A syntax extension that looks like HTML and is used with React.", known: false },
@@ -73,7 +77,7 @@ const initialDeck: FlashcardData[] = [
 ];
 
 export const useDeck = () => {
-    const [deck, setDeck] = useState<FlashcardData[]>(initialDeck);
+    const [deck, setDeck] = useState<FlashcardData[]>(() => shuffleArray(initialDeck));
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
     const currentCard = currentIndex < deck.length ? deck[currentIndex] : null;

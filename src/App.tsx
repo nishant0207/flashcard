@@ -34,11 +34,11 @@ const App: React.FC = () => {
                         </>
                     ) : (
                         <div className="mt-10 text-center space-y-4">
-                            <p className="text-2xl font-semibold text-gray-800">You're done! 🎉</p>
-                            <p className="text-gray-600">You’ve completed all the flashcards.</p>
+                            <p className="text-2xl font-semibold text-black dark:text-white">You're done! 🎉</p>
+                            <p className="text-black dark:text-white">You’ve completed all the flashcards.</p>
                             <button
                                 onClick={() => window.location.reload()}
-                                className="mt-2 px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                                className="mt-2 px-5 py-2 bg-black text-white rounded-md transition dark:bg-white dark:text-black"
                             >
                                 Restart
                             </button>
