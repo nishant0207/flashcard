@@ -7,6 +7,7 @@ export interface FlashcardData {
     front: string;
     back: string;
     known: boolean;
+    knownStreak?: number;
 }
 
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -79,9 +80,11 @@ const initialDeck: FlashcardData[] = [
 export const useDeck = () => {
     const [deck, setDeck] = useState<FlashcardData[]>(() => shuffleArray(initialDeck));
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const [startTime] = useState(() => Date.now());
 
     const currentCard = currentIndex < deck.length ? deck[currentIndex] : null;
     const isDone = currentIndex >= deck.length;
+    const elapsedTime = Math.floor((Date.now() - startTime) / 1000); // in seconds
 
     const markAsKnown = () => {
         updateCard(true);
@@ -92,9 +95,23 @@ export const useDeck = () => {
     };
 
     const updateCard = (known: boolean) => {
-        const updatedDeck = deck.map((card, i) =>
-            i === currentIndex ? { ...card, known } : card
-        );
+        const current = deck[currentIndex];
+        const updatedCard: FlashcardData = {
+            ...current,
+            known,
+            knownStreak: known
+                ? (current.knownStreak || 0) + 1
+                : 0,
+        };
+
+        // Remove current card and push updatedCard to end
+        const updatedDeck = [...deck];
+        updatedDeck.splice(currentIndex, 1);
+        updatedDeck.push(updatedCard);
+
+        // Sort deck so cards with lower knownStreak come first (prioritize cards with low streaks)
+        updatedDeck.sort((a, b) => (a.knownStreak || 0) - (b.knownStreak || 0));
+
         setDeck(updatedDeck);
         goToNextCard();
     };
@@ -112,5 +129,6 @@ export const useDeck = () => {
         markAsUnknown,
         currentIndex,
         isDone,
+        elapsedTime,
     };
 };

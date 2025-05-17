@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import confetti from 'canvas-confetti';
 import Flashcard from './components/Flashcard';
 import ProgressBar from './components/ProgressBar';
